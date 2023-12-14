@@ -7,11 +7,12 @@ This is a simple FastAPI application, which allows few simple operations:
 3) Get a series of image frames, at a specific depth range.
 
 **Notes**: 
-- The chosen DB is the `SQLite 3` for simplicity of this exercise. It will be completeley regenerated on each run, unless the application runs on a specific exernal mount.
-- The authentication which protects the add POST call is basic, it only consists of a secret token/password to send along, within the *Authorization header*.
+- The chosen DB is the `SQLite 3` for simplicity of this exercise. It will be completeley regenerated on each run, unless the application runs on a specific exernal mount. The module/class responsible for the DB interaction could be easily swapped with another technology/DB, keeping the same interface.
+- The Security level which protects the POST call is basic, it only consists of a secret token/password to send along, within the *Authorization header*.
 - Images can be of any height (using the counter, along with the depth), but to change the number of allowed columns the .env file needs to be updated accordingly.
 - Images are resized using a ratio for the height, to get to the 150px width.
-- Few libraries have been used, for simplicity reasons: PIL (Python Image Library - Pillow), csv, FastAPI and uvicorn, python-multipart. 
+- Few libraries have been used, for simplicity reasons: PIL (Python Image Library - Pillow), csv, FastAPI and uvicorn, python-multipart.
+- Still for simplicity and readability reasons, the code does not contain many optmizations, sanity checks and comprehensive error detection.
 
 
 ## Application workflow
@@ -72,3 +73,12 @@ The `first test`, *test_image_resize_and_encode()*, will:
 - convert the image into a base64 string and finally check with the expected value.
 
 The `second test`, *test_encode_and_store_in_db()*, will do almost the same things for the first one, but passing by the storing and reading from the DB, to ensure its expected functionalities.
+
+
+### Image Processing
+For simplicity, the PIL library has been used, along with its simple and standard ways to process images, like applying resizing and color mapping.
+
+The assumption of the structure of the provided CSV file is that it contains image frames, spread on multiple rows. 
+In each row, it contains:
+- column1/depth: **depth** and **image single pixel slice** (1x200px), separated by a dot. As long as each following row contains the same depth, it belongs to the same image frame for that specific depth.
+- column1-column200: contains the single slice of the image, each column the grey scale value of the pixel on that position.
