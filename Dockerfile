@@ -1,17 +1,16 @@
 FROM python:3.11
 
-# 
-RUN apt-get update
+# Doing some repositories update
 RUN pip install --upgrade pip
 
 WORKDIR /
 ENV PYTHONPATH=/app
-# Following will allow to see StdOut logs in K8s (kubectl logs)
-ENV PYTHONUNBUFFERED=1
 
 # Copying the app in the Python base image
 COPY ./app /app
 
+# Install required libraries at latest version as possible, just for simplicity
+# But they're version should be fixed normally
 RUN pip install -r /app/requirements.txt
 
 # Running automated tests to be sure the code works as expected

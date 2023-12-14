@@ -3,7 +3,7 @@ from services import image_service, database_service
 
 
 # This test will:
-# 1) load a fixed portion of the CSV (img at depth 9000)
+# 1) load a fixed/test portion of the provided CSV (img at depth 9000)
 # 2) convert the image into the Image object
 # 3) process and resize the image
 # 4) encode64 the image
@@ -35,6 +35,7 @@ def test_encode_and_store_in_db():
     image, invalid_line = read_images_from_csv('/app/tests/test.csv')
     image = img_proc.load_and_resize_images(images=image)
 
+    # Insert the image in the DB and then retrieve it
     db.insert_images(image)
     test_b64 = db.get_image(image[0][0])
 
