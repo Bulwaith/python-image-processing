@@ -22,6 +22,8 @@ The application will run throuh the `docker compose` command:
 docker compose up --build
 ```
 
+### This goes through few steps:
+
 ### 1) Docker build
 An image will be built, starting from the official `Python:3.11` image, the code is copied in the image and few basic libraries are installed.
 After the intial steps, a full test is called upon the code, to prevent a corrupted running.
