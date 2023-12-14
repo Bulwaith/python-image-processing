@@ -11,13 +11,14 @@ This is a simple FastAPI application, which allows few simple operations:
 - The authentication which protects the add POST call is basic, it only consists of a secret token/password to send along, within the *Authorization header*.
 - Images can be of any height (using the counter, along with the depth), but to change the number of allowed columns the .env file needs to be updated accordingly.
 - Images are resized using a ratio for the height, to get to the 150px width.
+- Few libraries have been used, for simplicity reasons: PIL (Python Image Library - Pillow), csv, FastAPI and uvicorn, python-multipart. 
 
 
 ## Application workflow
 To start the application, [Docker Desktop]("https://www.docker.com/products/docker-desktop/") is required.
 The application will run throuh the `docker compose` command:
 ```
-docker compose up
+docker compose up --build
 ```
 
 ### 1) Docker build
@@ -53,5 +54,21 @@ The images are returned as an array of `base64` strings. The assumption is that 
 http://0.0.0.0:8000/add
 ```
 This is a protected endpoint, which allows users to add or replace image frames into the current running DB.
-The *Authorization* header needs to be there, with the value provided in the .*env* file.
+The *Authorization* header needs to be in the call, with the value provided in the .*env* file (*ANTONIO*).
+The CSV file must be passed in the body, as standard text file, with the name `csv_file`.
 The call returns some metadata around the process, like *nr of invalid lines*, *inserted images* and *overall status*.
+
+
+### TESTS
+Pytest and a folder, called `tests` has been created, to support the tests driven programming methodology, and to guardantee a better quality of the application.
+There are 2 tests which get executed automatically, running the command:
+```
+pytest /app
+```
+
+The `first test`, *test_image_resize_and_encode()*, will:
+- load the `test.csv` file;
+- load and process the only image in the file (10 rows, including the headers);
+- convert the image into a base64 string and finally check with the expected value.
+
+The `second test`, *test_encode_and_store_in_db()*, will do almost the same things for the first one, but passing by the storing and reading from the DB, to ensure its expected functionalities.
